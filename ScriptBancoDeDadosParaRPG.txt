@@ -1,0 +1,220 @@
+-- DDL ====================================================
+
+-- CREATE DATABASE BancoDeDadosRPG
+
+USE BancoDeDadosRPG
+
+/*CREATE TABLE Usuarios (
+		IDUsuario INT PRIMARY KEY IDENTITY,
+		Nickname VARCHAR(50) UNIQUE NOT NULL,
+		Email VARCHAR(100) UNIQUE NOT NULL,
+		Senha VARCHAR(255) NOT NULL
+)
+
+CREATE TABLE Classes (
+		IDClasse INT PRIMARY KEY IDENTITY,
+		Nome VARCHAR(50) UNIQUE NOT NULL,
+		Nivel INT NOT NULL,
+		Proficiencia VARCHAR(255),
+		BonusDeProficiencia INT,
+		Pericia VARCHAR(255),
+		Equipamento VARCHAR(255)
+)
+
+CREATE TABLE Personagens (
+		IDPersonagem INT PRIMARY KEY IDENTITY,
+		Nome VARCHAR(50) UNIQUE NOT NULL,
+		Raca VARCHAR(50) UNIQUE NOT NULL,
+		Nivel INT NOT NULL,
+		Experiencia INT NOT NULL,
+		Antecedente VARCHAR(100) NOT NULL,
+		Tendencia VARCHAR(50) NOT NULL,
+		ClasseDeArmadura INT NOT NULL,
+		Iniciativa INT NOT NULL,
+		Deslocamento INT NOT NULL,
+		PontosDeVida INT NOT NULL,
+		Forca INT NOT NULL,
+		Destreza INT NOT NULL,
+		Constituicao INT NOT NULL,
+		Inteligencia INT NOT NULL,
+		Sabedoria INT NOT NULL,
+		Carisma INT NOT NULL,
+		IDUsuario INT UNIQUE FOREIGN KEY REFERENCES Usuarios(IDUsuario),
+		IDClasse INT FOREIGN KEY REFERENCES Classes(IDClasse)
+)
+
+CREATE TABLE Habilidades (
+		IDHabilidade INT PRIMARY KEY IDENTITY,
+		Nome VARCHAR(50) NOT NULL,
+		Dado VARCHAR(50) NOT NULL,
+		ClasseDeDificuldade VARCHAR(100),
+		Descricao VARCHAR(255)
+)
+
+CREATE TABLE ClassesHabilidades (
+		IDClasse INT FOREIGN KEY REFERENCES Classes(IDClasse),
+		IDHabilidade INT FOREIGN KEY REFERENCES Habilidades(IDHabilidade)
+)
+
+ALTER TABLE Classes DROP COLUMN Nivel;
+
+ALTER TABLE Classes DROP COLUMN BonusDeProficiencia;
+
+ALTER TABLE Habilidades ALTER COLUMN ClasseDeDificuldade VARCHAR(255);*/
+
+-- DML ====================================================
+
+INSERT INTO Usuarios VALUES (
+		'Alexandre O Grande',
+		'emailalexandre@exemplo.com',
+		'GrandeSenha1234'
+)
+
+INSERT INTO Usuarios VALUES (
+		'Gabriel da Montanha',
+		'emailgabriel@exemplo.com',
+		'SenhaDaMontanha9876'
+)
+
+INSERT INTO Classes VALUES (
+		'Bárbaro',
+		'Armas Simples, Armas Marciais, Armaduras Leves, Armaduras Médias,
+		Escudos, Salvaguarda de Força, Salvaguarda de Cosntituição',
+		'2 Prícias entre: Lidar com Animais, Atletismo, Intimidação,
+		Natureza, Percepção, Sobrevivência',
+		'Arma Marcial escolhida, 1 Kit de Explorador e 4 Lanças'
+)
+
+INSERT INTO Classes VALUES (
+		'Monge',
+		'Armas Simples, Espadas Curtas, 1 Ferramenta de Artesão ou
+		1 Instrumento Musical, Salvaguarda de Força, Salvaguarda de Destreza',
+		'2 Perícias entre: Acobracia, Atletismo, História, Intuição, Religião,
+		Furtividade',
+		'Espada Curta ou Arma Simples escolhida, 1 Kit de Explorador ou
+		1 Kit de Explorador de Masmorras, 10 Dardos'
+)
+
+INSERT INTO Personagens VALUES (
+		'DeuBug',
+		'Meio-Orc',
+		1,
+		0,
+		'Marinheiro',
+		'Caótico-Mau',
+		17,
+		3,
+		30,
+		38,
+		15,
+		13,
+		14,
+		8,
+		12,
+		10,
+		1,
+		1
+)
+
+INSERT INTO Personagens VALUES (
+		'BitBug',
+		'Humano',
+		1,
+		0,
+		'Orfão',
+		'Leal-Bom',
+		14,
+		5,
+		30,
+		12,
+		13,
+		16,
+		15,
+		11,
+		14,
+		9,
+		2,
+		2
+)
+
+INSERT INTO Habilidades VALUES (
+	'Escudo Supremo',
+	'1 D20',
+	'Teste de Destresa de quem defende contra Teste de Atributo de Ataque
+	de quem Ataca, em caso de sucesso o dano é bloqueado, em caso de falha,
+	o dano é reduzido pela metade',
+	'Mesmo na falha, sempre protejerá a quem defende'
+)
+
+INSERT INTO Habilidades VALUES (
+	'Lança Letal',
+	'3 D8',
+	'1 D20 somado ao Modificador de força',
+	'Lança que sempre acertará o coração do inimigo'
+)
+
+INSERT INTO Habilidades(Nome, Dado, Descricao) VALUES (
+	'Lança Mortal',
+	'3 D8',
+	'Lança que sempre acertará o coração do inimigo'
+),(
+	'Recuperar vida',
+	'2 D10',
+	'Recupera a vida de quem usa a habilidade, ou alguém à escolha'
+)
+
+INSERT INTO ClassesHabilidades VALUES (
+		1,
+		3
+),(
+		1,
+		2
+),(
+		2,
+		4
+),(
+		2,
+		2
+)
+
+UPDATE Usuarios
+SET Senha = 'NovaGrandeSenha1234'
+WHERE IDUsuario = 1
+
+UPDATE Habilidades
+SET ClasseDeDificuldade = '1 D20 somado ao Modificador de força'
+WHERE IDHabilidade = 3
+
+UPDATE Habilidades
+SET ClasseDeDificuldade = NULL
+WHERE IDHabilidade = 3
+
+DELETE FROM Habilidades
+WHERE IDHabilidade = 5
+
+-- DQL ====================================================
+
+SELECT * FROM Usuarios
+SELECT * FROM Classes
+SELECT * FROM Personagens
+SELECT * FROM Habilidades
+SELECT * FROM ClassesHabilidades
+
+SELECT * FROM Usuarios
+WHERE IDUsuario = 1
+
+SELECT * FROM Habilidades
+WHERE IDHabilidade = 1
+
+SELECT ClasseDeDificuldade FROM Habilidades
+WHERE IDHabilidade = 2
+
+SELECT * FROM Personagens
+INNER JOIN Classes
+ON Personagens.IDClasse = Classes.IDClasse
+
+SELECT Usuarios.Nickname 'Jogador', Personagens.Nome 'Personagem', Classes.Nome 'Classe' FROM Personagens
+INNER JOIN Classes
+ON Personagens.IDClasse = Classes.IDClasse
+INNER JOIN Usuarios
+ON Personagens.IDUsuario = Usuarios.IDUsuario

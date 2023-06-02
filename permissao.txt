@@ -1,0 +1,51 @@
+
+-- Segurança da Informação - Controle de Acesso - comandos DCL do SQL
+
+CREATE LOGIN aluno
+WITH PASSWORD = 'Abc12345';
+
+USE BancoDeDadosRPG;
+
+CREATE USER usuario_consulta
+FOR LOGIN aluno;
+
+GRANT SELECT TO usuario_consulta;
+
+GRANT INSERT TO usuario_consulta;
+
+REVOKE INSERT FROM usuario_consulta;
+
+
+-- consultar permissões de um usuário de uma base de dados
+-- utilizando a stored procedure do sistema sp_helprotect
+EXEC BancoDeDadosRPG.dbo.sp_helprotect @username = 'usuario_consulta';
+
+
+-- Teste de login com controle de acesso - comandos DML do SQL ---------------
+
+SELECT * FROM Usuarios;
+
+INSERT INTO Usuarios VALUES(
+		'NicknameDeletado',
+		'emaildeletado@exemplo.com',
+		'SenhaDeletada'
+);
+
+DELETE FROM Usuarios 
+WHERE IDUsuario = 3;
+
+INSERT INTO Usuarios VALUES(
+		'NicknameNãoCriado',
+		'emailnaocriado@exemplo.com',
+		'SenhaNãoCriada'
+);
+
+
+
+-- Exclusão de usuário e login
+
+-- DROP USER usuario_consulta;
+
+-- DROP LOGIN aluno;
+
+
